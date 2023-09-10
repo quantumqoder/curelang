@@ -1,6 +1,6 @@
 # LANGUAGE SYNTAX
 
-# Comment Lines (both innline and block)
+# Comment Lines (both in-line and block)
     -:<comment-body>:-
 
 # Import Statements
