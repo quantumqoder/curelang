@@ -14,10 +14,10 @@
     "<module-name.class-name.function-name>"
 
 # Data Types
-## Multivector
+## Non-Empty
 Includes integers, non-integers, complex, quaternions, ...  
 1, 1.5, 1+i, 1+i+j+k, 1+e0+e1+e2+e01+e02+e12+e012, ...
-## Not A Multivector (NAM)
+## Undefined
 basically everything else; strings, character, class, functions, modules
 ## Empty
 basically, None, void, [], {}, anything which is empty.  
@@ -49,16 +49,26 @@ Same as the variable scopes in other languages
     ->
 
 # Function Def
-    <function-name>(<parameter-list>):
-        <function-body>
-        <expression> ->
+```
+<function-name> <- {
+    [parameter-list]
+    <function-body>
+    -> [return-parameters]
+}
+```
 
 # Class Def
-    <class-name>:
-        <field-name> "or" <field-name> <- <value>
-        -:constants are defined with all letters in capital
-        apple <- 5 this is a mutable variable
-        APPLE <- 5 this is an immutable constant:-
-        <function-name>(<parameter-list>):
-            <function-body>
-            <expression> ->
+```
+<class-name> <- {
+    [class-varibales]
+    <class-name> <- {
+        [instance-variables]
+        <contructor-body>
+    }
+    <function-name> <- {
+        [parameter-list]
+        <function-body>
+        -> [return-parameters]
+    }
+}
+```
