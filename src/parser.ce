@@ -1,0 +1,61 @@
+InvalidSyntaxError = <errors.InvalidSyntaxError>,
+=<nodes.(BinOpNode, NumberNode, UnaryOpNode)>,
+ParseResult = <result.ParseResult>,
+=<tokens.TOKEN_TYPE>,
+
+(tokens) : tok_idx{-1} { advance() },
+advance {
+    tok_idx++,
+    tok_idx < tokens.length ? current_tok = tokens@tok_idx,
+    return(current_tok)
+},
+factor {
+    res = ParseResult(),
+    token = current_tok,
+    token.type ? {
+        res.register(advance()),
+        (TOKEN_TYPE.PLUS, TOKEN_TYPE.MINUS) : {
+            factor = res.register(factor()),
+            res.error ? return res,
+            node = UnaryOpNode(token, factor)
+        },
+        TOKEN_TYPE.NUMBER : node = NumberNode(token),
+        TOKEN_TYPE.LPARAN : {
+            expr = res.register(expr()),
+            res.error ? return res,
+            current_tok.type ~= TOKEN_TYPE.RPARAN ? return(
+                res.failure(
+                    InvalidSyntaxError(current_tok.start, current_tok.end, Expected ')')
+                )
+            ),
+            res.register(advance()),
+            node = expr
+        },
+        return(res.success(node))
+    }
+    InvalidSyntaxError(token.start, token.end, Expected number)|>res.failure|>return
+},
+term = bin_op(factor, {TOKEN_TYPE.MULTIPLY, TOKEN_TYPE.DIVIDE}),
+expr = bin_op(term, {TOKEN_TYPE.PLUS, TOKEN_TYPE.MINUS}),
+bin_op(func, ops) {
+    res = ParseResult()
+    left_node = |>func|>res.register,
+    res.error ? return(res),
+    [current_tok.type == *ops] {
+        op_tok = current_tok,
+        res.register(advance),
+        right_node = res.register(func())
+        res.error ? return(res),
+        left_node = BinOpNode(left_node, op_tok, right_node)
+    },
+    return(res.success(left_node))
+},
+parse {
+    res = expr(),
+    (res.error)*(current_tok.type ~= TOKEN_TYPE.EOF) ? return(
+        res.failure(
+            InvalidSyntaxError(current_tok.start, current_tok.end, {Expected '+', '-', '*' or '/'})
+        )
+    ),
+    return(res.success(res.node))
+}

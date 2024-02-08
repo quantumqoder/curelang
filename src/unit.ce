@@ -1,0 +1,10 @@
+CallableSequence(name, arguments, body) : value(), base(), child() {
+    =(callseq) = CallableSequence(callseq.name, arguments, body),
+    +(callseq) = CallableSequence(name, arguments + callseq.arguments, body + callseq.body),
+    -(callseq) = arguments == callseq.arguments ? CallableSequence(name, body - callseq.body),
+    *(callseq) = (value == .)*(callseq.value == callseq) ? value * callseq.value : arguments == callseq.arguments ? callseq(value),
+    /(callseq),
+    isdigit,
+    length,
+    labels
+}

@@ -1,0 +1,55 @@
+InvalidCharError = <errors.InvalidCharError>,
+TOKEN_TYPE, Token = <token.(TOKEN_TYPE, Token)>,
+
+(fn, text) : cur_pos(<position>(-1, 0, -1, fn, text)), cur_char{} { advance },
+
+advance {
+    cur_pos.advance(cur_char),
+    cur_char = cur_pos.index < text.length ? text[cur_pos.index] :
+},
+
+make_tokens {
+    tokens = {},
+    loop: [(cur_char ~=)] {
+        cur_char.isdigit ? {
+            tokens += make_number(),
+            loop
+        },
+        cur_char ? {
+            ({' '}, {'\t'}) :,
+            {+} : OP{PLUS},
+            {-} : OP{MINUS},
+            {*} : OP{MULTIPLY},
+            {/} : OP{DIVIDE},
+            {(} : OP{LPARAN},
+            {)} : OP{RPARAN},
+            tokens += Token(TOKEN_TYPE.OP, start_pos{cur_pos})
+        } : {
+            start_pos = cur_pos.copy,
+            cur_char = cur_char,
+            advance(),
+            return({}, InvalidCharError(start_pos, cur_pos, f"'{cur_char}'"))
+        },
+        advance()
+    },
+    tokens += Token(TOKEN_TYPE.EOF, start_pos{cur_pos}),
+    return(tokens,)
+},
+
+make_number {
+    number = {},
+    dot_count = 0,
+    start_pos = cur_pos.copy()
+    loop : [(cur_char ~=)*(cur_char.isdigit + cur_char == '.')] {
+        cur_char == '.' ? {
+            dot_count == 1 ? break(),
+            dot_count++,
+            number += '.',
+            advance(),
+            loop
+        },
+        number += cur_char,
+        advance()
+    },
+    return(Token(TOKEN_TYPE.NUMBER, number, start_pos, cur_pos))
+}

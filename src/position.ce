@@ -1,0 +1,12 @@
+(index, line, column, fn, ftxt) {
+    advance(current_char{}) {
+        index++,
+        column++,
+        current_char == "\n" ? {
+            line++,
+            column{0}
+        },
+        return(..value)
+    },
+    copy = ..(index, line, column, fn, ftxt)
+}

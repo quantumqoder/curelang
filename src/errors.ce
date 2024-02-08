@@ -1,0 +1,9 @@
+Error(start, end, message) {
+    dump = f"{.name}: {message}\nFile: {start.fn}, line: {start.line + 1}"
+},
+
+InvalidCharError = Error,
+
+InvalidSyntaxError = Error,
+
+RuntimeError = Error
