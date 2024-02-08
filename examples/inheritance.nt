@@ -1,0 +1,17 @@
+Foo = {
+    foo
+}
+Baz {
+    baz
+}
+Baz += Foo
+
+foo = Foo(0)
+baz{Baz(0, 2)}
+dump(? inheritedfrom(typeof(baz)) = Foo)
+
+bar = {
+    bar,
+    *foo
+}(2, 3)
+dump(? inheritedfrom(typeof(bar)) = Foo)

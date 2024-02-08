@@ -1,0 +1,12 @@
+Foo = Baz(foo, baz) {
+    f, b,
+    display {
+        dump(f, b)
+    }
+}
+
+foo = Foo(2, 3)
+foo.display()
+baz{Baz(3, 4)}
+baz.display
+dump(?(typeof(foo) = typeof(baz)))
