@@ -1,14 +1,18 @@
+import logging
 from typing import Callable, NoReturn, Union
 
 from nodes import BinOpNode, Node, NumberNode, UnaryOpNode
-from results import RuntimeResult
+from results import Result
 from tokens import TOKEN_TYPE
 from values import Number
+
+logger = logging.getLogger("cse")
 
 
 class Interpreter:
     def visit(self, node: Node) -> Union[Number, NoReturn]:
         method_name: str = f"visit_{type(node).__name__.lower()}"
+        logger.info(f"{method_name}")
         method: Callable[[Node], Union[Number, NoReturn]] = getattr(
             self, method_name, self.no_visit_method
         )
@@ -17,13 +21,14 @@ class Interpreter:
     def no_visit_method(self, node: Node) -> NoReturn:
         raise Exception(f"No visit_{type(node).__name__} method defined")
 
-    def visit_numbernode(self, node: NumberNode) -> RuntimeResult:
-        return RuntimeResult().success(
+    def visit_numbernode(self, node: NumberNode) -> Result:
+        return Result().success(
             Number(node.token.value).set_pos(node.pos_start, node.pos_end)
         )
 
     def visit_binopnode(self, node: BinOpNode) -> Number:
-        res = RuntimeResult()
+        logger.debug("binary op node")
+        res = Result()
         left_node = res.register(self.visit(node.left_node))
         if res.error:
             return res
