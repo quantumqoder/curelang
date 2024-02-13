@@ -25,6 +25,28 @@ class Parser:
         logger.debug("advance parser", extra={"cur_token_idx": self.tok_idx})
         return self.current_token
 
+    def parse(self) -> ParseResult:
+        logger.info("parsing tokens")
+        res: ParseResult = self.expr()
+        if res.error and self.current_token.type != TOKEN_TYPE.EOF:
+            return res.failure(
+                InvalidSyntaxError(
+                    self.current_token.pos_start,
+                    self.current_token.pos_end,
+                    "Expected '+', '-', '*' or '/'",
+                )
+            )
+        logger.debug("parse result", extra={"result": res.node})
+        return res.success(res.node)
+
+    def expr(self) -> ParseResult:
+        logger.debug("evaluate expression")
+        return self.bin_op(self.term, [TOKEN_TYPE.PLUS, TOKEN_TYPE.MINUS])
+
+    def term(self) -> ParseResult:
+        logger.debug("evaluate term")
+        return self.bin_op(self.factor, [TOKEN_TYPE.MUL, TOKEN_TYPE.DIV])
+
     def factor(self) -> ParseResult:
         logger.debug("evaluate factor")
         res = ParseResult()
@@ -58,14 +80,6 @@ class Parser:
             InvalidSyntaxError(token.pos_start, token.pos_end, "Expected number")
         )
 
-    def term(self) -> ParseResult:
-        logger.debug("evaluate term")
-        return self.bin_op(self.factor, [TOKEN_TYPE.MUL, TOKEN_TYPE.DIV])
-
-    def expr(self) -> ParseResult:
-        logger.debug("evaluate expression")
-        return self.bin_op(self.term, [TOKEN_TYPE.PLUS, TOKEN_TYPE.MINUS])
-
     def bin_op(
         self, func: Callable[[Self], ParseResult], ops: List[auto]
     ) -> ParseResult:
@@ -82,32 +96,3 @@ class Parser:
                 return res
             left_node = BinOpNode(left_node, op_tok, right_node)
         return res.success(left_node)
-
-    def parse(self) -> ParseResult:
-        logger.info("parsing tokens")
-        res: ParseResult = self.expr()
-        if res.error and self.current_token.type != TOKEN_TYPE.EOF:
-            return res.failure(
-                InvalidSyntaxError(
-                    self.current_token.pos_start,
-                    self.current_token.pos_end,
-                    "Expected '+', '-', '*' or '/'",
-                )
-            )
-        logger.debug("parse result", extra={"result": res.node})
-        return res.success(res.node)
-        # return self.bin_op(self.term, [TOKEN_TYPE.PLUS, TOKEN_TYPE.MINUS])
-        # return self.bin_op(self.factor, [TOKEN_TYPE.MUL, TOKEN_TYPE.DIV])
-        # return self.factor()
-        # return self.term()
-        # return self.expr()
-        # return self.bin_op(self.term, [TOKEN_TYPE.PLUS, TOKEN_TYPE.MINUS])
-        # return self.bin_op(self.factor, [TOKEN_TYPE.MUL, TOKEN_TYPE.DIV])
-        # return self.factor()
-        # return self.term()
-        # return self.expr()
-        # return self.bin_op(self.term, [TOKEN_TYPE.PLUS, TOKEN_TYPE.MINUS])
-        # return self.bin_op(self.factor, [TOKEN_TYPE.MUL, TOKEN_TYPE.DIV])
-        # return self.factor()
-        # return self.term()
-        # return self.expr()
