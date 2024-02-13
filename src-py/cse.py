@@ -13,6 +13,8 @@ def execute(fn: str, text: str):
     # Generate tokens
     lexer = Lexer(fn, text)
     tokens, error = lexer.make_tokens()
+    logger.debug("generated tokens", extra={"tokens": tokens})
+    print(f"{tokens=}")
     if error:
         logger.error(error)
         return None, error
@@ -20,6 +22,8 @@ def execute(fn: str, text: str):
     # Generate AST
     parser = Parser(tokens)
     ast = parser.parse()
+    logger.debug("final node", extra={"node": ast.node})
+    print(f"{ast.node=}")
     if ast.error:
         logger.error(ast.error)
         return None, ast.error
