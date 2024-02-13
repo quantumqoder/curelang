@@ -4,7 +4,7 @@ from typing import Callable, List, Optional, Self
 
 from errors import InvalidSyntaxError
 from nodes import BinOpNode, Node, NumberNode, UnaryOpNode
-from results import ParseResult
+from results import Result
 from tokens import TOKEN_TYPE, Token
 
 logger = logging.getLogger("cse.parser")
@@ -15,10 +15,10 @@ class Parser:
         logger.debug("initiate parser")
         self.tokens: List[Token] = tokens
         self.tok_idx: int = -1
+        self.current_token: Optional[Token] = None
         self.advance()
 
     def advance(self) -> Token:
-        self.current_token: Optional[Token] = None
         if self.tok_idx < len(self.tokens):
             self.tok_idx += 1
             self.current_token = self.tokens[self.tok_idx]
@@ -28,9 +28,9 @@ class Parser:
         )
         return self.current_token
 
-    def parse(self) -> ParseResult:
+    def parse(self) -> Result:
         logger.info("parsing tokens")
-        res: ParseResult = self.expr()
+        res: Result = self.expr()
         if res.error and self.current_token.type != TOKEN_TYPE.EOF:
             return res.failure(
                 InvalidSyntaxError(
@@ -39,22 +39,20 @@ class Parser:
                     "Expected '+', '-', '*' or '/'",
                 )
             )
-        logger.debug("parse result", extra={"result": res.node})
-        return res.success(res.node)
+        logger.debug("parse result", extra={"result": res.value})
+        return res.success(res.value)
 
-    def expr(self) -> ParseResult:
+    def expr(self) -> Result:
         logger.info("evaluate expression")
         return self.bin_op(self.term, [TOKEN_TYPE.PLUS, TOKEN_TYPE.MINUS])
 
-    def term(self) -> ParseResult:
+    def term(self) -> Result:
         logger.info("evaluate term")
         return self.bin_op(self.factor, [TOKEN_TYPE.MUL, TOKEN_TYPE.DIV])
 
-    def bin_op(
-        self, func: Callable[[Self], ParseResult], ops: List[auto]
-    ) -> ParseResult:
+    def bin_op(self, func: Callable[[Self], Result], ops: List[auto]) -> Result:
         logger.debug("binary operation", extra={"func": func.__name__, "ops": ops})
-        res = ParseResult()
+        res = Result()
         left_node: Node = res.register(func())
         logger.debug(f"executed {func.__name__}", extra={"left node": left_node})
         if res.error:
@@ -73,9 +71,9 @@ class Parser:
             logger.debug(f"{left_node}")
         return res.success(left_node)
 
-    def factor(self) -> ParseResult:
+    def factor(self) -> Result:
         logger.info("evaluate factor")
-        res = ParseResult()
+        res = Result()
         token: Token = self.current_token
         logger.debug("in factor", extra={"current token": token})
         match token.type:
