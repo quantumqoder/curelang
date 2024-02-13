@@ -47,6 +47,8 @@ class Lexer:
                     tokens.append(Token(TOKEN_TYPE.MUL, start_pos=self.cur_pos))
                 case "/":
                     tokens.append(Token(TOKEN_TYPE.DIV, start_pos=self.cur_pos))
+                case "^":
+                    tokens.append(Token(TOKEN_TYPE.POW, start_pos=self.cur_pos))
                 case "(":
                     tokens.append(Token(TOKEN_TYPE.LEFT_BRAKET, start_pos=self.cur_pos))
                 case ")":

@@ -41,7 +41,7 @@ class Interpreter:
             case TOKEN_TYPE.DIV:
                 result = left_node / right_node
             case TOKEN_TYPE.POW:
-                pass
+                result = left_node**right_node
             case TOKEN_TYPE.EQ:
                 pass
             case TOKEN_TYPE.NE:

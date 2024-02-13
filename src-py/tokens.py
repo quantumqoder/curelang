@@ -10,6 +10,7 @@ class TOKEN_TYPE(Enum):
     MINUS = auto()
     MUL = auto()
     DIV = auto()
+    POW = auto()
     LEFT_BRAKET = auto()
     RIGHT_BRAKET = auto()
     EOF = auto()
