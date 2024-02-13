@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Optional, Self, Union
+from typing import Literal, Optional, Self, Union
 
 from errors import Error
 from nodes import Node
@@ -16,7 +16,9 @@ class Result:
     def success(self, *args) -> Self:
         if self.__class__ not in (ParseResult, RuntimeResult):
             raise
-        attr = "node" if self.__class__ == ParseResult else "value"
+        attr: Literal["node", "value"] = (
+            "node" if self.__class__ == ParseResult else "value"
+        )
         setattr(self, attr, args[0])
         return self
 
