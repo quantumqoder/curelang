@@ -16,6 +16,9 @@ class Node:
     def __str__(self) -> str:
         return f"{self.token}"
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.__str__()})"
+
 
 class NumberNode(Node): ...
 
@@ -35,6 +38,7 @@ class BinOpNode(Node):
     def __init__(self, left_node: Node, token: Token, right_node: Node) -> None:
         UnaryOpNode.__init__(self, token, right_node)
         self.left_node: Node = left_node
+        self.right_node: Node = right_node
         self.pos_start = left_node.pos_start
         logger.debug(f"{__class__.__name__}", extra={"node": __class__.__str__(self)})
 
