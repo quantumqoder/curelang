@@ -22,13 +22,13 @@ def execute(fn: str, text: str):
     # Generate AST
     parser = Parser(tokens)
     ast = parser.parse()
-    logger.debug("final node", extra={"node": ast.node})
-    print(f"{ast.node=}")
+    logger.debug("final node", extra={"node": ast.value})
+    print(f"{ast.value=}")
     if ast.error:
         logger.error(ast.error)
         return None, ast.error
 
     # Execute program
     interpreter = Interpreter()
-    result = interpreter.visit(ast.node)
+    result = interpreter.visit(ast.value)
     return result, None
