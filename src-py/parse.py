@@ -19,10 +19,13 @@ class Parser:
 
     def advance(self) -> Token:
         self.current_token: Optional[Token] = None
-        if self.tok_idx < len(self.tokens) - 1:
+        if self.tok_idx < len(self.tokens):
             self.tok_idx += 1
             self.current_token = self.tokens[self.tok_idx]
-        logger.debug("advance parser", extra={"cur_token_idx": self.tok_idx})
+        logger.debug(
+            "advance parser",
+            extra={self.tok_idx: self.current_token},
+        )
         return self.current_token
 
     def parse(self) -> ParseResult:
@@ -40,17 +43,41 @@ class Parser:
         return res.success(res.node)
 
     def expr(self) -> ParseResult:
-        logger.debug("evaluate expression")
+        logger.info("evaluate expression")
         return self.bin_op(self.term, [TOKEN_TYPE.PLUS, TOKEN_TYPE.MINUS])
 
     def term(self) -> ParseResult:
-        logger.debug("evaluate term")
+        logger.info("evaluate term")
         return self.bin_op(self.factor, [TOKEN_TYPE.MUL, TOKEN_TYPE.DIV])
 
+    def bin_op(
+        self, func: Callable[[Self], ParseResult], ops: List[auto]
+    ) -> ParseResult:
+        logger.debug("binary operation", extra={"func": func.__name__, "ops": ops})
+        res = ParseResult()
+        left_node: Node = res.register(func())
+        logger.debug(f"executed {func.__name__}", extra={"left node": left_node})
+        if res.error:
+            return res
+        while self.current_token.type in ops:
+            op_tok: Token = self.current_token
+            logger.debug(
+                "binary operation", extra={"current operation": self.current_token.type}
+            )
+            res.register(self.advance())
+            right_node: Node = res.register(func())
+            logger.debug(f"executed {func.__name__}", extra={"right node": right_node})
+            if res.error:
+                return res
+            left_node = BinOpNode(left_node, op_tok, right_node)
+            logger.debug(f"{left_node}")
+        return res.success(left_node)
+
     def factor(self) -> ParseResult:
-        logger.debug("evaluate factor")
+        logger.info("evaluate factor")
         res = ParseResult()
         token: Token = self.current_token
+        logger.debug("in factor", extra={"current token": token})
         match token.type:
             case TOKEN_TYPE.PLUS | TOKEN_TYPE.MINUS:
                 res.register(self.advance())
@@ -59,8 +86,9 @@ class Parser:
                     return res
                 return res.success(UnaryOpNode(token, factor))
             case TOKEN_TYPE.NUMBER:
+                node = NumberNode(token)
                 res.register(self.advance())
-                return res.success(NumberNode(token))
+                return res.success(node)
             case TOKEN_TYPE.LEFT_BRAKET:
                 res.register(self.advance())
                 expr: Node = res.register(self.expr())
@@ -79,20 +107,3 @@ class Parser:
         return res.failure(
             InvalidSyntaxError(token.pos_start, token.pos_end, "Expected number")
         )
-
-    def bin_op(
-        self, func: Callable[[Self], ParseResult], ops: List[auto]
-    ) -> ParseResult:
-        logger.debug("binary operation", extra={"call": func.__name__, "ops": ops})
-        res = ParseResult()
-        left_node: Node = res.register(func())
-        if res.error:
-            return res
-        while self.current_token.type in ops:
-            op_tok: Token = self.current_token
-            res.register(self.advance())
-            right_node: Node = res.register(func())
-            if res.error:
-                return res
-            left_node = BinOpNode(left_node, op_tok, right_node)
-        return res.success(left_node)
