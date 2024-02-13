@@ -35,7 +35,8 @@ class Lexer:
         while self.cur_char != None:
             match self.cur_char:
                 case " " | "\t":
-                    token = tokens.pop()
+                    self.advance()
+                    continue
                 case self.cur_char if self.cur_char.isdigit():
                     token = self.make_number()
                 case "+":
