@@ -33,28 +33,25 @@ class Lexer:
         logger.info("generating tokens")
         tokens: List[Token] = []
         while self.cur_char != None:
-            if self.cur_char.isdigit():
-                tokens.append(self.make_number())
-                continue
             match self.cur_char:
                 case " " | "\t":
-                    pass
+                    token = tokens.pop()
+                case self.cur_char if self.cur_char.isdigit():
+                    token = self.make_number()
                 case "+":
-                    tokens.append(Token(TOKEN_TYPE.PLUS, start_pos=self.cur_pos))
+                    token = Token(TOKEN_TYPE.PLUS, start_pos=self.cur_pos)
                 case "-":
-                    tokens.append(Token(TOKEN_TYPE.MINUS, start_pos=self.cur_pos))
+                    token = Token(TOKEN_TYPE.MINUS, start_pos=self.cur_pos)
                 case "*":
-                    tokens.append(Token(TOKEN_TYPE.MUL, start_pos=self.cur_pos))
+                    token = Token(TOKEN_TYPE.MUL, start_pos=self.cur_pos)
                 case "/":
-                    tokens.append(Token(TOKEN_TYPE.DIV, start_pos=self.cur_pos))
+                    token = Token(TOKEN_TYPE.DIV, start_pos=self.cur_pos)
                 case "^":
-                    tokens.append(Token(TOKEN_TYPE.POW, start_pos=self.cur_pos))
+                    token = Token(TOKEN_TYPE.POW, start_pos=self.cur_pos)
                 case "(":
-                    tokens.append(Token(TOKEN_TYPE.LEFT_BRAKET, start_pos=self.cur_pos))
+                    token = Token(TOKEN_TYPE.LEFT_BRAKET, start_pos=self.cur_pos)
                 case ")":
-                    tokens.append(
-                        Token(TOKEN_TYPE.RIGHT_BRAKET, start_pos=self.cur_pos)
-                    )
+                    token = Token(TOKEN_TYPE.RIGHT_BRAKET, start_pos=self.cur_pos)
                 case _:
                     pos_start: Position = self.cur_pos.copy()
                     cur_char: str = self.cur_char
@@ -62,6 +59,7 @@ class Lexer:
                     return [], InvalidCharError(
                         pos_start, self.cur_pos, f"'{cur_char}'"
                     )
+            tokens.append(token)
             self.advance()
         tokens.append(Token(TOKEN_TYPE.EOF, start_pos=self.cur_pos))
         logger.debug(f"{tokens=}")
