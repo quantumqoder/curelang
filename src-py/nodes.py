@@ -1,4 +1,6 @@
 import logging
+from abc import abstractmethod
+from typing import override
 
 from position import Position
 from tokens import Token
@@ -7,40 +9,56 @@ logger = logging.getLogger("cse.parser")
 
 
 class Node:
-    def __init__(self, token: Token) -> None:
-        self.pos_start: Position = token.pos_start
-        self.token: Token = token
-        self.pos_end: Position = token.pos_end
-        logger.debug(f"{__class__.__name__}", extra={"node": __class__.__str__(self)})
+    def __init__(self) -> None:
+        logger.debug(f"{self}")
+
+    @abstractmethod
+    def __repr__(self) -> str:
+        pass
 
     def __str__(self) -> str:
-        return f"{self.token}"
+        return f"{self.__class__.__name__}({self.__repr__()})"
 
+
+class NumberNode(Node):
+    @override
+    def __init__(self, token: Token) -> None:
+        self.token: Token = token
+        self.pos_start: Position = token.pos_start
+        self.pos_end: Position = token.pos_end
+        super().__init__()
+
+    @override
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self.__str__()})"
-
-
-class NumberNode(Node): ...
+        return f"{self.token}"
 
 
 class UnaryOpNode(Node):
-    def __init__(self, token: Token, node: Node) -> None:
-        Node.__init__(self, token)
-        self.node: Node = node
-        self.pos_end = node.pos_end
-        logger.debug(f"{__class__.__name__}", extra={"node": __class__.__str__(self)})
+    @override
+    def __init__(self, token: Token, node: NumberNode) -> None:
+        self.token: Token = token
+        self.node: NumberNode = node
+        self.pos_start: Position = token.pos_start
+        self.pos_end: Position = node.pos_end
+        super().__init__()
 
-    def __str__(self) -> str:
-        return f"{Node.__str__(self)}, {self.node}"
+    @override
+    def __repr__(self) -> str:
+        return f"{self.token}, {self.node}"
 
 
 class BinOpNode(Node):
-    def __init__(self, left_node: Node, token: Token, right_node: Node) -> None:
-        UnaryOpNode.__init__(self, token, right_node)
-        self.left_node: Node = left_node
-        self.right_node: Node = right_node
-        self.pos_start = left_node.pos_start
-        logger.debug(f"{__class__.__name__}", extra={"node": __class__.__str__(self)})
+    @override
+    def __init__(
+        self, left_node: NumberNode, token: Token, right_node: NumberNode
+    ) -> None:
+        self.left_node: NumberNode = left_node
+        self.token: Token = token
+        self.right_node: NumberNode = right_node
+        self.pos_start: Position = left_node.pos_start
+        self.pos_end: Position = right_node.pos_end
+        super().__init__()
 
-    def __str__(self) -> str:
-        return f"{self.left_node}, {UnaryOpNode.__str__(self)}"
+    @override
+    def __repr__(self) -> str:
+        return f"{self.left_node}, {self.token}, {self.right_node}"
