@@ -31,10 +31,10 @@ class ParseResult(Result):
         self.node: Optional[Node] = None
 
     def register(self, res: Union[Self, Node]) -> Node:
-        if not isinstance(res, ParseResult):
-            return res
-        if res.error:
-            self.error = res.error
+        if isinstance(res, ParseResult):
+            if res.error:
+                self.error = res.error
+            return res.node
         return res
 
     def __repr__(self) -> str:
