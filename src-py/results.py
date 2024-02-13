@@ -1,62 +1,38 @@
-from abc import abstractmethod
-from typing import Literal, Optional, Self, Union
+from typing import Optional, Self, Union
 
 from errors import Error
 from nodes import Node
+from tokens import Token
 from values import Number
 
 
 class Result:
     def __init__(self) -> None:
         self.error: Optional[Error] = None
+        self.value: Optional[Union[Node, Number]] = None
 
-    @abstractmethod
-    def register(self, res: Union[Self, Node]) -> Union[Optional[Number], Node]: ...
+    def register(self, res: Union[Self, Token, Number]) -> Union[Self, Node, Number]:
+        if isinstance(res, Result):
+            if res.error:
+                self.error = res.error
+            return res.value
+        return res
 
-    def success(self, *args) -> Self:
-        if self.__class__ not in (ParseResult, RuntimeResult):
-            raise
-        attr: Literal["node", "value"] = (
-            "node" if self.__class__ == ParseResult else "value"
-        )
-        setattr(self, attr, args[0])
+    def success(self, value: Union[Node, Number]) -> Self:
+        self.value = value
         return self
 
     def failure(self, error: Error) -> Self:
         self.error = error
         return self
 
-
-class ParseResult(Result):
-    def __init__(self) -> None:
-        Result.__init__(self)
-        self.node: Optional[Node] = None
-
-    def register(self, res: Union[Self, Node]) -> Node:
-        if isinstance(res, ParseResult):
-            if res.error:
-                self.error = res.error
-            return res.node
-        return res
-
     def __repr__(self) -> str:
-        return f"ParseResult({self.error=}, {self.node=})"
+        return f"Result({self.error=}, {self.value=})"
 
     def __bool__(self) -> bool:
         return self.error is None
 
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, ParseResult):
+    def __eq__(self, other: Self) -> bool:
+        if not isinstance(other, Result):
             return NotImplemented
-        return self.error == other.error and self.node == other.node
-
-
-class RuntimeResult(Result):
-    def __init__(self) -> None:
-        Result.__init__(self)
-        self.value: Optional[Number] = None
-
-    def register(self, res: Self) -> Optional[Number]:
-        if res.error:
-            self.error = res.error
-        return res.value
+        return self.error == other.error and self.value == other.value
