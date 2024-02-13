@@ -15,7 +15,7 @@
         "json": {
             "()": "log_utils.JSONFormatter",
             "fmt_keys": {
-                "timestamp": "timestamp",
+                "at": "timestamp",
                 "level": "levelname",
                 "logger": "name",
                 "thread": "threadName",
