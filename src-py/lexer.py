@@ -39,6 +39,8 @@ class Lexer:
                     continue
                 case self.cur_char if self.cur_char.isdigit():
                     token = self.make_number()
+                    tokens.append(token)
+                    continue
                 case "+":
                     token = Token(TOKEN_TYPE.PLUS, start_pos=self.cur_pos)
                 case "-":
