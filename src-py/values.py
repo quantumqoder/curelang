@@ -1,6 +1,6 @@
 from abc import abstractproperty
 from types import NotImplementedType
-from typing import Any, Dict, List, Optional, Self, Tuple, Union, override
+from typing import Any, Dict, List, Optional, Self, Union, override
 
 from position import Position
 
@@ -18,10 +18,10 @@ class CallableSequence:
         self.set_pos()
 
     def set_pos(
-        self, start_pos: Optional[Position] = None, end_pos: Optional[Position] = None
+        self, pos_start: Optional[Position] = None, pos_end: Optional[Position] = None
     ) -> Self:
-        self.start_pos: Optional[Position] = start_pos
-        self.end_pos: Optional[Position] = end_pos
+        self.pos_start: Optional[Position] = pos_start
+        self.pos_end: Optional[Position] = pos_end
         return self
 
     def __add__(self, other: Self) -> Union[Self, NotImplementedType]:
