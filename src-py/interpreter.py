@@ -41,11 +41,11 @@ class Interpreter:
                 result = left_node + right_node
             case TOKEN_TYPE.MINUS:
                 result = left_node - right_node
-            case TOKEN_TYPE.MUL:
+            case TOKEN_TYPE.MULTIPLY:
                 result = left_node * right_node
-            case TOKEN_TYPE.DIV:
+            case TOKEN_TYPE.DIVIDE:
                 result = left_node / right_node
-            case TOKEN_TYPE.POW:
+            case TOKEN_TYPE.POWER:
                 result = left_node**right_node
             case TOKEN_TYPE.EQ:
                 pass
