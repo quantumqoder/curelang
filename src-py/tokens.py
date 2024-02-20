@@ -8,11 +8,11 @@ class TOKEN_TYPE(Enum):
     NUMBER = auto()
     PLUS = auto()
     MINUS = auto()
-    MUL = auto()
-    DIV = auto()
-    POW = auto()
-    LEFT_BRAKET = auto()
-    RIGHT_BRAKET = auto()
+    MULTIPLY = auto()
+    DIVIDE = auto()
+    POWER = auto()
+    LBRAKET = auto()
+    RBRAKET = auto()
     EOF = auto()
 
 
