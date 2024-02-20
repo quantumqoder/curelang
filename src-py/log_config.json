@@ -24,15 +24,38 @@
                 "lineno": "lineno",
                 "message": "message"
             }
+        },
+        "cse_json": {
+            "()": "log_utils.CSEFormatter",
+            "fmt_keys": {
+                "file": "filename",
+                "function": "funcName",
+                "lineno": "lineno"
+            }
         }
     },
     "filters": {
-        "no_error": {
-            "()": "log_utils.NonErrorFilter"
+        "debug": {
+            "()": "log_utils.DebugFilter"
+        },
+        "no_critical": {
+            "()": "log_utils.NoCriticalFilter"
         }
     },
     "handlers": {
-        "error": {
+        "rich_handler": {
+            "class": "rich.logging.RichHandler",
+            "level": "DEBUG",
+            "show_time": true,
+            "omit_repeated_times": true,
+            "log_time_format": "%Y-%m-%d %H:%M:%S%z",
+            "show_level": true,
+            "show_path": true,
+            "enable_link_path": true,
+            "rich_tracebacks": true,
+            "formatter": "cse_json"
+        },
+        "error_handler": {
             "class": "logging.handlers.RotatingFileHandler",
             "level": "WARNING",
             "formatter": "json",
@@ -40,7 +63,7 @@
             "maxBytes": 10000,
             "backupCount": 3
         },
-        "file": {
+        "cse_handler": {
             "class": "logging.handlers.RotatingFileHandler",
             "level": "INFO",
             "formatter": "detailed",
@@ -48,29 +71,37 @@
             "maxBytes": 10000,
             "backupCount": 3
         },
-        "debug": {
+        "debug_handler": {
             "class": "logging.handlers.RotatingFileHandler",
             "level": "DEBUG",
             "formatter": "json",
             "filename": "./src-py/logs/debug.log.jsonl",
             "filters": [
-                "no_error"
+                "debug"
+            ]
+        },
+        "stdout": {
+            "class": "logging.StreamHandler",
+            "formatter": "detailed",
+            "stream": "ext://sys.stdout",
+            "filters": [
+                "no_critical"
             ]
         },
         "queue_handler": {
             "class": "logging.handlers.QueueHandler",
+            "respect_handler_level": true,
             "handlers": [
-                "error",
-                "file",
-                "debug"
-            ],
-            "respect_handler_level": true
+                "error_handler",
+                "cse_handler",
+                "debug_handler"
+            ]
         }
     },
     "loggers": {
         "root": {
             "handlers": [
-                "queue_handler"
+                "rich_handler"
             ],
             "level": "DEBUG"
         }
