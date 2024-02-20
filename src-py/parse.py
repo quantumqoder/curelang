@@ -48,7 +48,7 @@ class Parser:
 
     def term(self) -> Result:
         logger.info("evaluate term")
-        return self.bin_op(self.factor, [TOKEN_TYPE.MUL, TOKEN_TYPE.DIV])
+        return self.bin_op(self.factor, [TOKEN_TYPE.MULTIPLY, TOKEN_TYPE.DIVIDE])
 
     def bin_op(self, func: Callable[[Self], Result], ops: List[auto]) -> Result:
         logger.debug("binary operation", extra={"func": func.__name__, "ops": ops})
@@ -87,12 +87,12 @@ class Parser:
                 node = NumberNode(token)
                 res.register(self.advance())
                 return res.success(node)
-            case TOKEN_TYPE.LEFT_BRAKET:
+            case TOKEN_TYPE.LBRAKET:
                 res.register(self.advance())
                 expr: Node = res.register(self.expr())
                 if res.error:
                     return res
-                if self.current_token.type != TOKEN_TYPE.RIGHT_BRAKET:
+                if self.current_token.type != TOKEN_TYPE.RBRAKET:
                     return res.failure(
                         InvalidSyntaxError(
                             self.current_token.pos_start,
