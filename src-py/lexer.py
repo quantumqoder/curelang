@@ -46,15 +46,15 @@ class Lexer:
                 case "-":
                     token = Token(TOKEN_TYPE.MINUS, start_pos=self.cur_pos)
                 case "*":
-                    token = Token(TOKEN_TYPE.MUL, start_pos=self.cur_pos)
+                    token = Token(TOKEN_TYPE.MULTIPLY, start_pos=self.cur_pos)
                 case "/":
-                    token = Token(TOKEN_TYPE.DIV, start_pos=self.cur_pos)
+                    token = Token(TOKEN_TYPE.DIVIDE, start_pos=self.cur_pos)
                 case "^":
-                    token = Token(TOKEN_TYPE.POW, start_pos=self.cur_pos)
+                    token = Token(TOKEN_TYPE.POWER, start_pos=self.cur_pos)
                 case "(":
-                    token = Token(TOKEN_TYPE.LEFT_BRAKET, start_pos=self.cur_pos)
+                    token = Token(TOKEN_TYPE.LBRAKET, start_pos=self.cur_pos)
                 case ")":
-                    token = Token(TOKEN_TYPE.RIGHT_BRAKET, start_pos=self.cur_pos)
+                    token = Token(TOKEN_TYPE.RBRAKET, start_pos=self.cur_pos)
                 case _:
                     pos_start: Position = self.cur_pos.copy()
                     cur_char: str = self.cur_char
