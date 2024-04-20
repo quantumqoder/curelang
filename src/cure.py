@@ -1,19 +1,14 @@
-import atexit
-import json
-import logging
-import logging.config
-import pathlib
-
 import rich
 
 from core.context import Context
-from interpreter import Interpreter
-from lexer import Lexer
-from parse import Parser
-from symbol_table import SymbolTable
-from values import Number
+from core.interpreter import Interpreter
+from core.lexer import Lexer
+from core.parse import Parser
+from core.symbol_table import SymbolTable
+from core.values import Number
+from utils.log_utils import get_logger
 
-logger = logging.getLogger("cse")
+logger = get_logger("cse")
 
 global_symbol_table = SymbolTable()
 global_symbol_table.set("NULL", Number(0))
@@ -50,16 +45,6 @@ def execute(fn: str, text: str):
 
 if __name__ == "__main__":
     import sys
-
-    config_file = pathlib.Path(".//src//log_config.json")
-    with open(config_file) as f:
-        config = json.load(f)
-    logging.config.dictConfig(config)
-    queue_handler = logging.getHandlerByName("queue_handler")
-    if queue_handler:
-        queue_handler.listener.start()
-        atexit.register(queue_handler.listener.stop)
-    logger.info("initial logger setup")
 
     fn = sys.argv[1]
     with open(fn, "r") as f:
