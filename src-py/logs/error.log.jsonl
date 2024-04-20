@@ -1,4 +1,0 @@
-{"at": "2024-02-13T21:48:07.136020+00:00", "level": "ERROR", "logger": "cse", "thread": "MainThread", "file": "cse.py", "function": "execute", "lineno": 28, "message": "InvalidSyntaxError: Expected ')'\nFile: <stdin>, line: 1"}
-{"at": "2024-02-13T21:49:50.648599+00:00", "level": "ERROR", "logger": "cse", "thread": "MainThread", "file": "cse.py", "function": "execute", "lineno": 28, "message": "InvalidSyntaxError: Expected ')'\nFile: <stdin>, line: 1"}
-{"at": "2024-02-13T21:49:59.942336+00:00", "level": "ERROR", "logger": "cse", "thread": "MainThread", "file": "cse.py", "function": "execute", "lineno": 28, "message": "InvalidSyntaxError: Expected '+', '-', '*' or '/'\nFile: <stdin>, line: 1"}
-{"at": "2024-02-13T21:50:12.427040+00:00", "level": "ERROR", "logger": "cse", "thread": "MainThread", "file": "cse.py", "function": "execute", "lineno": 28, "message": "InvalidSyntaxError: Expected ')'\nFile: <stdin>, line: 1"}
