@@ -1,0 +1,80 @@
+<tokens.{TOKEN_TYPE, Token}>,
+
+(fn, text ftxt) : cur_pos(<Position>(-1, 0, -1, fn, ftxt)), Optional<text> cur_char(nil) {
+    advance {
+        cur_pos.advance(cur_char),
+        cur_char = (cur_pos.index < ftxt.length()) ? ftxt.cur_pos.index : nil,
+    },
+
+    Seq<Token> make_tokens => {
+        [cur_char ~= nil] {
+            advance(),
+            cur_char ? {
+                (" " | "\t") => advance()
+                (" " | "\t") : {
+                    advance(),
+                },
+                (cur_char.isdigit()) ? {
+                    make_number()
+                },
+                (cur_char.isalpha()) ? {
+                    make_identifier()
+                },
+                LOOP,
+                Token(
+                    TOKEN_TYPE.{
+                        cur_char ? {
+                            "=" : EQUAL,
+                            "+" : PLUS,
+                            "-" : MINUS,
+                            "*" : MULTIPLY,
+                            "/" : DIVIDE,
+                            "^" : POWER,
+                            "(" : LBRAKET,
+                            ")" : RBRAKET,
+                        }
+                    },
+                    start_pos{cur_pos}
+                )
+            } : {
+                start_pos = cur_pos.copy,
+                cur_char = .cur_char
+                advance(),
+                InvalidChar(f"{cur_char}", start_pos, cur_pos)
+            }
+        }
+    } + Token(TOKEN_TYPE.EOF, start_pos{cur_pos}),
+
+    make_number {
+        dot_count = 0,
+        start_pos = cur_pos.copy,
+        Token(
+            TOKEN_TYPE.NUMBER,
+            text {
+                (cur_char == ".") ? {
+                    (dot_count == 1) ? BREAK,
+                    dot_count++,
+                    "."
+                } : cur_char
+            } [(cur_char ~= nil) & (cur_char.isdigit() | cur_char == ".")] {
+                advance(),
+            },
+            start_pos,
+            cur_pos
+        )
+    },
+
+    make_identifier {
+        start_pos = cur_pos.copy,
+        Token(
+            TOKEN_TYPE.IDENTIFIER,
+            text {
+                cur_char
+            } [(cur_char ~= nil) & (cur_char.isalphanum() | cur_char == ".")] {
+                advance(),
+            },
+            start_pos,
+            cur_pos
+        )
+    }
+}
