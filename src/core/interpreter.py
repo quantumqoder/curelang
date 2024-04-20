@@ -47,13 +47,13 @@ class Interpreter:
 
     def visit_numbernode(self, node: NumberNode, context: Context) -> Result:
         return Result().success(
-            Number(node.token.value)
+            Number(node.num_token.value)
             .set_context(context)
             .set_pos(node.pos_start, node.pos_end)
         )
 
     def visit_binopnode(self, node: BinOpNode, context: Context) -> Result:
-        logger.debug("binary op node")
+        logger.debug("binary op node", extra={"operation": node.op_token.type})
         res = Result()
         left_node: Number = res.register(self.visit(node.left_node, context))
         if res.error:
