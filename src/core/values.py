@@ -1,4 +1,4 @@
-from abc import abstractproperty
+from abc import abstractmethod
 from types import NotImplementedType
 from typing import Any, Dict, List, Optional, Self, Union, override
 
@@ -59,7 +59,8 @@ class CallableSequence:
         if self.body:
             return len(self.body)
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def labels(self) -> NotImplementedType: ...
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
