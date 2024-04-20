@@ -1,4 +1,0 @@
-2024-02-07 13:39:52+0530 - cse - 4 - INFO - initial logger setup
-2024-02-07 13:39:57+0530 - cse - 11 - INFO - Executing <stdin>
-2024-02-07 13:39:57+0530 - cse.lexer - 33 - INFO - generating tokens
-2024-02-07 13:39:57+0530 - cse.parser - 87 - INFO - parsing tokens

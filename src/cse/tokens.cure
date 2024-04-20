@@ -1,0 +1,28 @@
+<Position>,
+
+TOKEN_TYPE {
+    NUMBER,
+    IDENTIFIER,
+    EQUAL,
+    PLUS,
+    MINUS,
+    MULTIPLY,
+    DIVIDE,
+    POWER,
+    LBRAKET,
+    RBRAKET,
+    EOF
+},
+
+Token(
+    type,
+    Optional<number> value,
+    Optional<Position> (
+        start_pos = start_pos ? start_pos.copy,
+        end_pos = end_pos ? end_pos.copy : start_pos.copy.advance()
+    )
+) {
+    ==(. other) => (type == other.type) & (value == other.value),
+    dump => f"<{type}{value ? f"{value}"}>",
+    copy => .(type, value, start_pos, end_pos)
+}

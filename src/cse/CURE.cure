@@ -1,0 +1,76 @@
+# [Origin("Type")] [Name] [(Arguments)] [: initialization-params,] [=>] [{body}]
+
+# Function
+
+foo(a, b) {
+    dump(a, b), # Returns nil
+}
+
+foo(5, "e") # prints 5, "e" into the terminal
+
+foo(num a, num b) {
+    a + b # Returns a + b
+}
+
+dump(foo(5, "6")), # prints 11, converts the number-string into a number
+dump(foo(5, "A")), # prints 70, converts the ascii code into number
+
+# This is equivalent to:
+
+foo(num a, num b) => a + b
+
+# Providing the Type would type cast the return
+
+text foo(num a, num b) => a + b
+
+# Position behaviour
+(
+    number idx,
+    number ln,
+    number col,
+    text fn,
+    text ftxt
+) : index(idx),
+    line_num(ln),
+    col_num(col) {
+    . advance(Optional<text> current_char=nil) {
+        index++,
+        line_num++,
+        (current_char == "\n") ? {
+            line_num++,
+            col_num = 0
+        },
+        ..
+    },
+
+    copy => .(index, line_num, col_num, fn, ftxt),
+
+    dump => f"{fn=}, {line_num=}, {col_num=}"
+},
+
+# Token types
+{
+    NUMBER,
+    IDENTIFIER,
+    EQUAL,
+    PLUS,
+    MINUS,
+    MULTIPLY,
+    DIVIDE,
+    POWER,
+    LBRAKET,
+    RBRAKET,
+    EOF
+},
+
+# Type class
+(
+    type,
+    Optional<number> value,
+    Optional<(number, number, number, text, text)> start_pos,
+    Optional<(number, number, number, text, text)> end_pos
+) {
+    ==(. other) => (type == other.type) & (value == other.value),
+    dump => f"<{type}{value ? f"{value}"}>",
+    copy => .(type, value, start_pos, end_pos)
+}

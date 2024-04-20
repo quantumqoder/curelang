@@ -1,0 +1,15 @@
+(idx, ln, col, fn, ftxt) : index(idx), line_num(ln), col_num(col) {
+    . advance(Optional<text> current_char) {
+        index++,
+        col_num++,
+        (current_char == "\n") ? {
+            line_num++,
+            col_num = 0,
+        },
+        ..
+    },
+
+    copy => .(index, line_num, col_num, fn, ftxt),
+
+    dump => f"{fn=}, {line_num=}, {col_num=}"
+}
