@@ -1,0 +1,11 @@
+Foo = Baz(foo, baz) : _f(foo), _b(baz) {
+    display {
+        dump(_f, _b),
+    }
+} # creates a class Baz and assigns that same definition to Foo
+
+foo = Foo(2, 3)
+foo.display() # prints 2, 3 in the console, acts as a method
+baz{Baz(3, 4)} # store the memory reference of Baz(3, 4) into the variable baz
+baz.display # prints 3, 4 in the console, acts as a property
+dunp(foo.origin == baz.origin), # prints false, even if their body is the same

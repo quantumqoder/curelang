@@ -1,0 +1,18 @@
+Foo = {
+    foo
+}, # anonymous struct assigned to a variable Foo
+Baz {
+    baz
+}, # struct named as Baz
+Baz += Foo, # created new struct Baz with the properties of old Baz and Foo
+
+foo = Foo{0},
+baz{Baz{0, 2}},
+dump(baz.origin.inheritedfrom == Foo), # prints true
+
+bar = {
+    bar,
+    *foo # entities can be unpacked
+}{2, 3}, # declares an anonymous struct, fills it with values and then stored into bar
+dump(bar.origin.inheritedfrom == Foo), # prints false, because the struct was anonymous,
+                                       # and also foo was unpacked not inherited with "+"

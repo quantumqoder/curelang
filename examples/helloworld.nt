@@ -1,5 +1,0 @@
-dump(hello world),
-
-(x) {
-    dump(x)
-}(hello world)

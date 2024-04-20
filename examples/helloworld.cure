@@ -1,0 +1,5 @@
+dump("hello world"), # prints hello world in the console, built-in function
+
+(x) {
+    dump(x),
+}("hello world"), # prints hello world in the console, lambda implementation
