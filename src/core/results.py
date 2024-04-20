@@ -1,9 +1,9 @@
-from typing import Optional, Self, Union, overload
+from typing import Optional, Self, Union
 
-from errors import Error
-from nodes import Node
-from tokens import Token
-from values import Number
+from core.errors import Error
+from core.nodes import Node
+from core.tokens import Token
+from core.values import Number
 
 
 class Result:

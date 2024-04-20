@@ -1,12 +1,12 @@
-import logging
 from functools import partial
 from typing import List, Optional, Tuple, Union
 
-from errors import InvalidCharError
+from core.errors import InvalidCharError
 from core.position import Position
-from tokens import TOKEN_TYPE, Token
+from core.tokens import TOKEN_TYPE, Token
+from utils.log_utils import get_logger
 
-logger = logging.getLogger("cse.lexer")
+logger = get_logger("cure.lexer")
 
 
 class Lexer:

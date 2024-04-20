@@ -1,13 +1,14 @@
-import logging
 from typing import Callable, NoReturn, Union
 
 from core.context import Context
-from nodes import BinOpNode, Node, NumberNode, UnaryOpNode
-from results import Result
-from tokens import TOKEN_TYPE
-from values import Number
+from core.errors import InvalidOperationError
+from core.nodes import BinOpNode, Node, NumberNode, UnaryOpNode
+from core.results import Result
+from core.tokens import TOKEN_TYPE
+from core.values import Number
+from utils.log_utils import get_logger
 
-logger = logging.getLogger("cse")
+logger = get_logger("cure.interpreter")
 
 
 class Interpreter:

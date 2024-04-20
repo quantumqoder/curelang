@@ -1,12 +1,11 @@
-import logging
 from abc import abstractmethod
 from dataclasses import dataclass
-from typing import Self, Union, override
+from typing import Self, Union
 
-from core.position import Position
-from tokens import Token
+from core.tokens import Token
+from utils.log_utils import get_logger
 
-logger = logging.getLogger("cse.parser")
+logger = get_logger("cure.parser")
 
 
 class Node:

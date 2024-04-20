@@ -1,13 +1,20 @@
-import logging
 from enum import auto
 from typing import Callable, List, Optional, Self
 
-from errors import InvalidSyntaxError
-from nodes import BinOpNode, Node, NumberNode, UnaryOpNode, VarAccessNode, VarAssignNode
-from results import Result
-from tokens import TOKEN_TYPE, Token
+from core.errors import InvalidSyntaxError
+from core.nodes import (
+    BinOpNode,
+    Node,
+    NumberNode,
+    UnaryOpNode,
+    VarAccessNode,
+    VarAssignNode,
+)
+from core.results import Result
+from core.tokens import TOKEN_TYPE, Token
+from utils.log_utils import get_logger
 
-logger = logging.getLogger("cse.parser")
+logger = get_logger("cure.parser")
 
 
 class Parser:

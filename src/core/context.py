@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional, Self
 
 from core.position import Position
-from symbol_table import SymbolTable
+from core.symbol_table import SymbolTable
 
 
 @dataclass
