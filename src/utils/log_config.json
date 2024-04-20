@@ -13,7 +13,7 @@
 			"datefmt": "%Y-%m-%d %H:%M:%S%z"
 		},
 		"json": {
-			"()": "log_utils.JSONFormatter",
+			"()": "utils.log_utils.JSONFormatter",
 			"fmt_keys": {
 				"at": "timestamp",
 				"level": "levelname",
@@ -25,21 +25,19 @@
 				"message": "message"
 			}
 		},
-		"cse_json": {
-			"()": "log_utils.CSEFormatter",
+		"cure_json": {
+			"()": "utils.log_utils.CUREFormatter",
 			"fmt_keys": {
-				"file": "filename",
-				"lineno": "lineno",
 				"function": "funcName"
 			}
 		}
 	},
 	"filters": {
 		"debug": {
-			"()": "log_utils.DebugFilter"
+			"()": "utils.log_utils.DebugFilter"
 		},
 		"no_critical": {
-			"()": "log_utils.NoCriticalFilter"
+			"()": "utils.log_utils.NoCriticalFilter"
 		}
 	},
 	"handlers": {
@@ -53,21 +51,21 @@
 			"show_path": true,
 			"enable_link_path": true,
 			"rich_tracebacks": true,
-			"formatter": "cse_json"
+			"formatter": "cure_json"
 		},
 		"error_handler": {
 			"class": "logging.handlers.RotatingFileHandler",
 			"level": "WARNING",
 			"formatter": "json",
-			"filename": "./src/logs/error.log.jsonl",
+			"filename": "./logs/error.log.jsonl",
 			"maxBytes": 10000,
 			"backupCount": 3
 		},
-		"cse_handler": {
+		"cure_handler": {
 			"class": "logging.handlers.RotatingFileHandler",
 			"level": "INFO",
 			"formatter": "detailed",
-			"filename": "./src/logs/cse.log",
+			"filename": "./logs/cure.log",
 			"maxBytes": 10000,
 			"backupCount": 3
 		},
@@ -75,7 +73,7 @@
 			"class": "logging.handlers.RotatingFileHandler",
 			"level": "DEBUG",
 			"formatter": "json",
-			"filename": "./src/logs/debug.log.jsonl",
+			"filename": "./logs/debug.log.jsonl",
 			"filters": [
 				"debug"
 			]
@@ -93,7 +91,7 @@
 			"respect_handler_level": true,
 			"handlers": [
 				"error_handler",
-				"cse_handler",
+				"cure_handler",
 				"debug_handler"
 			]
 		}

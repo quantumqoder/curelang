@@ -1,7 +1,9 @@
+import atexit
 import datetime as dt
 import json
 import logging
 import logging.config
+import pathlib
 from typing import Any, Dict, Optional, Set, Union, override
 
 LOG_RECORD_BUILTIN_ATTRS: Set[str] = {
@@ -31,7 +33,21 @@ LOG_RECORD_BUILTIN_ATTRS: Set[str] = {
 }
 
 
-class CSEFormatter(logging.Formatter):
+def get_logger(name: str = "cure") -> logging.Logger:
+    logger: logging.Logger = logging.getLogger(name)
+    config_file = pathlib.Path(".//utils//log_config.json")
+    with open(config_file) as f:
+        config: Dict[str, Any] = json.load(f)
+    logging.config.dictConfig(config)
+    queue_handler: Optional[logging.Handler] = logging.getHandlerByName("queue_handler")
+    if queue_handler:
+        queue_handler.listener.start()
+        atexit.register(queue_handler.listener.stop)
+    logger.info("", extra={"logger": logger.name})
+    return logger
+
+
+class CUREFormatter(logging.Formatter):
     def __init__(self, fmt_keys: Optional[Dict[str, str]] = None) -> None:
         logging.Formatter.__init__(self)
         self.fmt_keys: Dict[str, str] = fmt_keys or {}
@@ -107,4 +123,4 @@ class DebugFilter(logging.Filter):
 class NoCriticalFilter(logging.Filter):
     @override
     def filter(self, record: logging.LogRecord) -> bool:
-        return record.levelno <= logging.CRITICAL
+        return record.levelno < logging.CRITICAL
