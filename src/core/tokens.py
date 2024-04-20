@@ -32,6 +32,7 @@ class TOKEN_TYPE(Enum):
     HASH = auto() # #
     AT = auto() # @
     DOT = auto() # .
+    EOF = auto() # EOF
 
 class Token:
     def __init__(
