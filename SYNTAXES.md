@@ -1,16 +1,18 @@
 # +
 
 The $+$ operator double downs as summation function with variadic arguments as well, meaning $+(a, b, c, ...)\rightarrow \sum a$.
+
 1. number1 + number2 -> addition
 2. string1 + string2 -> concatenation (f"{string1}{string2}")
 3. number + string -> addition if string is digit else {number, string}
 4. string + number -> addition if string is digit else concatenation (f"{string}{number}")
-5. sequence1 + sequence2 -> sequence extension ({*sequence1, *sequence2})
+5. sequence1 + sequence2 -> sequence extension ({*sequence1,*sequence2})
 6. sequence + element (single line) -> sequence extension
 
 # -
 
 The $-$ operator double downs as subtraction function with two arguments as well, meaning $-(a, b)\rightarrow a-b$.
+
 1. number1 - number2 -> subtraction
 2. string1 - string2 -> string removal ("duck" - "ck" -> "du", "saas" - "s" -> "aa")
 3. number - string -> subtraction if string is digit else nothing
@@ -21,15 +23,17 @@ The $-$ operator double downs as subtraction function with two arguments as well
 # *
 
 The $*$ operator double downs as product function with variadic arguments as well, meaning $*(a, b, c, ...)\rightarrow \Pi~a$.
+
 1. number1 * number2 -> multiplication
-2. string1 * string2 -> pair product ("duck" * "ck" -> {"dc", "dk", "uc", "uk", ..., "ck", "kc", "kk"})
-3. number * string -> multiplication if string is digit else string repeatition, number times (3 * "ass" -> "assassass")
-4. string * number -> string repeatition, number times ("ass" * 3 -> "assassass")
+2. string1 *string2 -> pair product ("duck"* "ck" -> {"dc", "dk", "uc", "uk", ..., "ck", "kc", "kk"})
+3. number *string -> multiplication if string is digit else string repeatition, number times (3* "ass" -> "assassass")
+4. string *number -> string repeatition, number times ("ass"* 3 -> "assassass")
 5. for other types, the operation needs to be explicitly defined
 
 # /
 
 The $/$ operator double downs as division function with two arguments as well, meaning $/(a, b)\rightarrow a/b$.
+
 1. number1 / number2 -> floor division
 2. string1 / string2 -> floor division if both strings are digits else truncate string ("duck" / "ck" -> "du", "saas" / "s" -> "saa")
 3. number / string -> floor division if string is digit else truncate dtring from front (2 / "duck" -> "ck")
@@ -48,13 +52,13 @@ The $/$ operator double downs as division function with two arguments as well, m
 
 # Callables (includes constructor functions, procedures, functions, properties)
 
-In CSE, callables are the most important and fundamental entity around which the whole programming language is build. Everything is a callable and as well a sequence (more on this later). In different sitatuons, these callables can act as constructors, procedures, functions or even properties.
+In CURE, callables are the most important and fundamental entity around which the whole programming language is build. Everything is a callable and as well a sequence (more on this later). In different sitatuons, these callables can act as constructors, procedures, functions or even properties.
 
-Constructors, in CSE, are callables which return an instance of the callable type.
+Constructors, in CURE, are callables which return an instance of the callable type.
 
-Procedures are callable which also return an instance of callable type, but not assigned to any identifier. Basically, in CSE, there's no difference between a procedure and a constructor, if the call is aasigned, then the callable is a constructor, if the call is not assigned, then it's a procedure.
+Procedures are callable which also return an instance of callable type, but not assigned to any identifier. Basically, in CURE, there's no difference between a procedure and a constructor, if the call is aasigned, then the callable is a constructor, if the call is not assigned, then it's a procedure.
 
-Functions are callables which return values. Pure functions can not be enforced, but can be implemented through proper design. Thus in CSE, callables are allowed to have side-effects.
+Functions are callables which return values. Pure functions can not be enforced, but can be implemented through proper design. Thus in CURE, callables are allowed to have side-effects.
 
 Properties are properties. They are directly excuted without invoking, but can ve invoked as well. what'll happen in the following scenario??
 `name(param1) = dump(param1)` `name` will dump param1, name = name will dump param, name(raj) = preet will dump raj, preet. meaning properties are callable first and then property.
@@ -117,6 +121,7 @@ Callable units are automatically asynchronous. A call to same unit within the sa
 Question? what happens when `name(params) : inits = sequence` -> returns the sequence only when all elements are identities (callables which return themselves). In other words, each and every element is evaluated.
 
 Supports multiple signatures as follows:-
+
 ```
     name {
         (params1) : inits1 {body1},
@@ -124,11 +129,13 @@ Supports multiple signatures as follows:-
         C(members common to both signatures)
     }
 ```
+
 This type of multiple signatures supports parameter-based dynamic class definition. The whole class body changes depending on the parameters provided to the contructor function call.
 
 ## Comparison between function definition of different programming languages
 
 C++
+
 ```cpp
     class Foo
     {
@@ -140,6 +147,7 @@ C++
 ```
 
 Python
+
 ```python
     from typing import Self
 
@@ -153,6 +161,7 @@ Python
 ```
 
 JavaScript
+
 ```javascript
     class Foo {
         constructor(foo) {
@@ -161,8 +170,9 @@ JavaScript
     }
 ```
 
-CSE
-```cse
+CURE
+
+```cure
     Foo {
         () : __foo{0} {},
         (foo) : __foo(foo) {}
@@ -176,12 +186,15 @@ This uses the javascript example on [this page](https://developer.mozilla.org/en
 ```
     Rectangle(height, weight) {}
 ```
+
 ```
     Rectangle = (height, weight) {}
 ```
+
 ```
     Rectangle = Rectangle2(height, weight) {}
 ```
+
 The 3rd definition creates inheritance.
 
 # Inheritance
@@ -189,6 +202,7 @@ The 3rd definition creates inheritance.
 ## Without introducing any new members
 
 C++
+
 ```cpp
     class Foo
     {
@@ -207,6 +221,7 @@ C++
 ```
 
 Python
+
 ```python
     class Foo:
         def __init__(self, foo: int=0) -> None:
@@ -216,8 +231,9 @@ Python
         ...
 ```
 
-CSE
-```cse
+CURE
+
+```cure
     Foo(foo) : __foo(foo) {},
 
     Baz = Foo
@@ -226,6 +242,7 @@ CSE
 ## With new members
 
 C++
+
 ```cpp
     class Foo
     {
@@ -248,6 +265,7 @@ C++
 ```
 
 Python
+
 ```python
     from typing import Optional
 
@@ -267,8 +285,9 @@ Python
             return self.__baz
 ```
 
-CSE
-```cse
+CURE
+
+```cure
     Foo(foo) : __foo(foo) {
         get_foo() = __foo
     },
@@ -283,7 +302,7 @@ CSE
 
 The same behaviour can be achieved by the unpack operation `*`.
 
-```cse
+```cure
     Foo(foo) : __foo(foo) {
         get_foo() = __foo
     },
@@ -303,6 +322,7 @@ Eveything is mutable.
 `num x: char` means that the input must be a number which will be converted to character. both
 
 All functions are dervied from CallableSequence, hence
+
 ```
     foo(a, b),
 
