@@ -27,6 +27,9 @@ class InvalidCharError(Error): ...
 class InvalidSyntaxError(Error): ...
 
 
+class InvalidOperationError(Error): ...
+
+
 class RuntimeError(Error):
     def __repr__(self) -> str:
         return f"{self.generate_traceback()}{Error.__repr__(self)}"
