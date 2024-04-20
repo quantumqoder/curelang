@@ -1,0 +1,50 @@
+<Result>,
+<tokens.{TOKEN_TYPE, Token}>,
+
+(Seq<Token> tokens) : token_index(-1), Optional<Token> current_token(nil) {
+    advance(),
+    advance {
+        (token_index < tokens.length) ? {
+            token_index++,
+            current_token = tokens.token_index
+        },
+        current_token.copy
+    },
+
+    parse {
+        result = expression(),
+        (~result.error & (current_token.type ~= TOKEN_TYPE.EOF)) ? {
+            => result.failure(
+                InvalidSyntax(
+                    "Expected '+', '-', '*' or, '/'",
+                    current_token.start_pos,
+                    current_token.end_pos
+                )
+            )
+        },
+        result.success(result.value)
+    },
+
+    expression {
+        result = Result(),
+        (current_token.type == TOKEN_TYPE.IDENTIFIER) ? {
+            result.register(advance()),
+            result.error ? =>> result,
+            (current_token.type == TOKEN_TYPE.EQUAL) ? {
+                result.register(advance()),
+                result.error ? =>>> result,
+                value = result.register(expression()),
+                result.error ? =>>> result,
+                result.success(VarAssignNode(var_name, value))
+            },
+            result.failure(
+                InvalidSyntax(
+                    "Expected '='",
+                    current_token.start_pos,
+                    current_token.end_pos
+                )
+            )
+        },
+        bin_op(term, {TOKEN_TYPE.PLUS, TOKEN_TYPE.MINUS})
+    },
+}
