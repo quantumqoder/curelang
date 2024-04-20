@@ -112,7 +112,7 @@ class Lexer:
 if __name__ == "__main__":
     par_lexer = partial(Lexer, "<module>")
     while True:
-        ftext = input("cse> ")
+        ftext = input("cure> ")
         lexer = par_lexer(ftext)
         tokens, error = lexer.make_tokens()
         print(error if error else tokens)

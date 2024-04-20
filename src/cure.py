@@ -8,7 +8,7 @@ from core.symbol_table import SymbolTable
 from core.values import Number
 from utils.log_utils import get_logger
 
-logger = get_logger("cse")
+logger = get_logger("cure")
 
 global_symbol_table = SymbolTable()
 global_symbol_table.set("NULL", Number(0))
@@ -40,6 +40,7 @@ def execute(fn: str, text: str):
     context = Context("<program>")
     context.symbol_table = global_symbol_table
     result = interpreter.visit(ast.value, context)
+    logger.debug("", extra={"symbol_table": context.symbol_table})
     return result, None
 
 
