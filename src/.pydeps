@@ -1,0 +1,11 @@
+[pydeps]
+max_bacon = 4
+verbose = 0
+pylib = False
+exclude =
+    os
+    re
+    sys
+    collections
+    __future__
+    rich
