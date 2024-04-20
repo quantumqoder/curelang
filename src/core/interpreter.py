@@ -62,49 +62,51 @@ class Interpreter:
         if res.error:
             return res
         # error = None
-        match node.token.type:
+        match node.op_token.type:
             case TOKEN_TYPE.PLUS:
                 result, error = (left_node + right_node), None
-            case TOKEN_TYPE.MINUS:
+            case TOKEN_TYPE.HYPHEN:
                 result, error = (left_node - right_node), None
-            case TOKEN_TYPE.MULTIPLY:
+            case TOKEN_TYPE.STAR:
                 result, error = (left_node * right_node), None
-            case TOKEN_TYPE.DIVIDE:
+            case TOKEN_TYPE.SLASH:
                 result, error = (left_node / right_node), None
             case TOKEN_TYPE.POWER:
                 result, error = (left_node**right_node), None
-            case TOKEN_TYPE.EQ:
+            case TOKEN_TYPE.EQUAL:
                 pass
-            case TOKEN_TYPE.NE:
+            case TOKEN_TYPE.LESS_THAN:
                 pass
-            case TOKEN_TYPE.LT:
-                pass
-            case TOKEN_TYPE.GT:
-                pass
-            case TOKEN_TYPE.LE:
-                pass
-            case TOKEN_TYPE.GE:
+            case TOKEN_TYPE.GREATER_THAN:
                 pass
             case _:
-                raise Exception(f"Unknown binary operator {node.token.type}")
+                error = InvalidOperationError(
+                    node.op_token.pos_start,
+                    node.op_token.pos_end,
+                    f"Unknown binary operator {node.op_token.type}",
+                )
         if error:
             return res.failure(error)
         return res.success(result.set_pos(node.pos_start, node.pos_end))
 
     def visit_unaryopnode(self, node: UnaryOpNode, context: Context) -> Result:
-        logger.debug("unary op node")
+        logger.debug("unary op node", extra={"operation": node.op_token.type})
         res = Result()
         number: Number = res.register(self.visit(node.node, context))
         if res.error:
             return res
         error = None
-        match node.token.type:
+        match node.op_token.type:
             case TOKEN_TYPE.PLUS:
                 result, error = number, None
-            case TOKEN_TYPE.MINUS:
+            case TOKEN_TYPE.HYPHEN:
                 result, error = -number, None
             case _:
-                raise Exception(f"Unknown unary operator {node.token.type}")
+                error = InvalidOperationError(
+                    node.op_token.pos_start,
+                    node.op_token.pos_end,
+                    f"Unknown unary operator {node.op_token.type}",
+                )
         if error:
             return res.failure(error)
         return res.success(result.set_pos(node.pos_start, node.pos_end))

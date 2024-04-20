@@ -75,11 +75,11 @@ class Parser:
                     "Expected '='",
                 )
             )
-        return self.bin_op(self.term, [TOKEN_TYPE.PLUS, TOKEN_TYPE.MINUS])
+        return self.bin_op(self.term, [TOKEN_TYPE.PLUS, TOKEN_TYPE.HYPHEN])
 
     def term(self) -> Result:
         logger.info("evaluate term")
-        return self.bin_op(self.factor, [TOKEN_TYPE.MULTIPLY, TOKEN_TYPE.DIVIDE])
+        return self.bin_op(self.factor, [TOKEN_TYPE.STAR, TOKEN_TYPE.SLASH])
 
     def bin_op(
         self,
@@ -121,7 +121,7 @@ class Parser:
         token: Token = self.current_token
         logger.debug("in factor", extra={"current token": token})
         match token.type:
-            case TOKEN_TYPE.PLUS | TOKEN_TYPE.MINUS:
+            case TOKEN_TYPE.PLUS | TOKEN_TYPE.HYPHEN:
                 res.register(self.advance())
                 factor = res.register(self.factor())
                 if res.error:
@@ -146,12 +146,12 @@ class Parser:
                 node = VarAccessNode(token)
                 res.register(self.advance())
                 return res.success(node)
-            case TOKEN_TYPE.LBRAKET:
+            case TOKEN_TYPE.LPAREN:
                 res.register(self.advance())
                 expr: Node = res.register(self.expr())
                 if res.error:
                     return res
-                if self.current_token.type != TOKEN_TYPE.RBRAKET:
+                if self.current_token.type != TOKEN_TYPE.RPAREN:
                     return res.failure(
                         InvalidSyntaxError(
                             self.current_token.pos_start,

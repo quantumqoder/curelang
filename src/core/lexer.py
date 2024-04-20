@@ -53,17 +53,17 @@ class Lexer:
                 case "+":
                     token = Token(TOKEN_TYPE.PLUS, pos_start=self.cur_pos)
                 case "-":
-                    token = Token(TOKEN_TYPE.MINUS, pos_start=self.cur_pos)
+                    token = Token(TOKEN_TYPE.HYPHEN, pos_start=self.cur_pos)
                 case "*":
-                    token = Token(TOKEN_TYPE.MULTIPLY, pos_start=self.cur_pos)
+                    token = Token(TOKEN_TYPE.STAR, pos_start=self.cur_pos)
                 case "/":
-                    token = Token(TOKEN_TYPE.DIVIDE, pos_start=self.cur_pos)
+                    token = Token(TOKEN_TYPE.SLASH, pos_start=self.cur_pos)
                 case "^":
                     token = Token(TOKEN_TYPE.POWER, pos_start=self.cur_pos)
                 case "(":
-                    token = Token(TOKEN_TYPE.LBRAKET, pos_start=self.cur_pos)
+                    token = Token(TOKEN_TYPE.LPAREN, pos_start=self.cur_pos)
                 case ")":
-                    token = Token(TOKEN_TYPE.RBRAKET, pos_start=self.cur_pos)
+                    token = Token(TOKEN_TYPE.RPAREN, pos_start=self.cur_pos)
                 case _:
                     pos_start: Position = self.cur_pos.copy()
                     cur_char: str = self.cur_char
